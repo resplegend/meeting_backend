@@ -2,15 +2,7 @@ import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-
-export class LoginResponseDto {
-  access_token: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-  };
-}
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
