@@ -3,24 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Meeting } from './meeting.entity';
 import { User } from '../users/user.entity';
-
-export class CreateMeetingDto {
-  title: string;
-  description: string;
-  startTime: Date;
-  endTime: Date;
-  location: string;
-  attendees: string[];
-}
-
-export class UpdateMeetingDto {
-  title?: string;
-  description?: string;
-  startTime?: Date;
-  endTime?: Date;
-  location?: string;
-  attendees?: string[];
-}
+import { CreateMeetingDto } from './dto/create-meeting.dto';
+import { UpdateMeetingDto } from './dto/update-meeting.dto';
 
 @Injectable()
 export class MeetingsService {
