@@ -1,251 +1,100 @@
 # Nest.js Backend API
 
-A RESTful API built with Nest.js for the Next.js & Nest.js Skill Test application.
+A RESTful API built with Nest.js for the Meeting Management application.
 
 ## Features
 
-- **JWT Authentication** - Secure token-based authentication
-- **Meeting Management** - Full CRUD operations for meetings
-- **User Management** - User authentication and validation
-- **CORS Support** - Configured for frontend integration
-- **TypeScript** - Full type safety throughout the application
+- **JWT Authentication**: Secure, token-based authentication
+- **Meeting Management**: Full CRUD for meetings
+- **User Management**: User authentication and validation
+- **CORS Support**: Ready for frontend integration
+- **TypeScript**: Full type safety
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v16+)
 - npm or yarn
 
-## Installation
+## Getting Started
+
+### Installation
 
 ```bash
 npm install
 ```
 
-## Running the Application
+### Running the Application
 
-### Development Mode
+- **Development**:  
+  ```bash
+  npm run start:dev
+  ```
+  Runs at [http://localhost:3001](http://localhost:3001)
 
-```bash
-npm run start:dev
-```
+- **Production**:  
+  ```bash
+  npm run build
+  npm run start:prod
+  ```
 
-The application will be available at `http://localhost:3001`
+- **Debug**:  
+  ```bash
+  npm run start:debug
+  ```
 
-### Production Mode
+## API Overview
 
-```bash
-npm run build
-npm run start:prod
-```
+### Authentication
 
-### Debug Mode
+- **POST /auth/login**  
+  Authenticate and receive a JWT token.
 
-```bash
-npm run start:debug
-```
-
-## API Documentation
-
-### Authentication Endpoints
-
-#### POST /auth/login
-Authenticate a user and receive a JWT token.
-
-**Request Body:**
-```json
-{
-  "email": "admin@gmail.com",
-  "password": "admin123"
-}
-```
-
-**Response:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": 1,
+  **Request:**
+  ```json
+  {
     "email": "admin@gmail.com",
-    "name": "Admin User"
+    "password": "admin123"
   }
-}
-```
+  ```
+  **Response:**
+  ```json
+  {
+    "access_token": "...",
+    "user": { "id": 1, "email": "...", "name": "..." }
+  }
+  ```
 
-### Meeting Endpoints (Protected - Requires JWT)
+### Meetings (Protected)
 
-#### GET /meetings
-Get all meetings.
+- **GET /meetings**: List all meetings
+- **GET /meetings/:id**: Get meeting by ID
+- **POST /meetings**: Create a meeting
+- **PATCH /meetings/:id**: Update a meeting
+- **DELETE /meetings/:id**: Delete a meeting
 
-**Headers:**
-```
-Authorization: Bearer <jwt_token>
-```
-
-#### GET /meetings/:id
-Get a specific meeting by ID.
-
-**Headers:**
-```
-Authorization: Bearer <jwt_token>
-```
-
-#### POST /meetings
-Create a new meeting.
-
-**Headers:**
-```
-Authorization: Bearer <jwt_token>
-```
-
-**Request Body:**
-```json
-{
-  "title": "Team Meeting",
-  "description": "Weekly team sync",
-  "startTime": "2024-01-15T10:00:00.000Z",
-  "endTime": "2024-01-15T11:00:00.000Z",
-  "location": "Conference Room A",
-  "attendees": ["john@example.com", "jane@example.com"]
-}
-```
-
-#### PATCH /meetings/:id
-Update an existing meeting.
-
-**Headers:**
-```
-Authorization: Bearer <jwt_token>
-```
-
-**Request Body:**
-```json
-{
-  "title": "Updated Team Meeting",
-  "description": "Updated description"
-}
-```
-
-#### DELETE /meetings/:id
-Delete a meeting.
-
-**Headers:**
-```
-Authorization: Bearer <jwt_token>
-```
+**All require:**  
+`Authorization: Bearer <jwt_token>`
 
 ## Project Structure
 
 ```
 src/
-├── auth/                    # Authentication module
-│   ├── auth.controller.ts   # Auth endpoints
-│   ├── auth.service.ts      # Auth business logic
-│   ├── auth.module.ts       # Auth module configuration
-│   ├── jwt.strategy.ts      # JWT authentication strategy
-│   └── jwt-auth.guard.ts    # JWT authentication guard
-├── users/                   # Users module
-│   ├── users.service.ts     # User management logic
-│   └── users.module.ts      # Users module configuration
-├── meetings/                # Meetings module
-│   ├── meetings.controller.ts # Meeting endpoints
-│   ├── meetings.service.ts    # Meeting business logic
-│   └── meetings.module.ts     # Meetings module configuration
-├── app.controller.ts        # Main app controller
-├── app.service.ts           # Main app service
-├── app.module.ts            # Root module
-└── main.ts                  # Application entry point
+├── auth/         # Authentication module
+├── users/        # User management
+├── meetings/     # Meeting management
+├── app.module.ts # Root module
+└── main.ts       # Entry point
 ```
-
-## Dependencies
-
-### Core Dependencies
-- `@nestjs/common` - Nest.js core framework
-- `@nestjs/core` - Nest.js core functionality
-- `@nestjs/platform-express` - Express platform
-- `@nestjs/jwt` - JWT authentication
-- `@nestjs/passport` - Passport integration
-- `passport` - Authentication middleware
-- `passport-jwt` - JWT strategy for Passport
-- `bcryptjs` - Password hashing
-- `class-validator` - Validation decorators
-- `class-transformer` - Object transformation
-
-### Development Dependencies
-- `@types/passport-jwt` - TypeScript types for passport-jwt
-- `@types/bcryptjs` - TypeScript types for bcryptjs
 
 ## Configuration
 
-### JWT Configuration
-The JWT secret is currently hardcoded for development. In production, use environment variables:
+- **JWT Secret**: Use environment variables for production.
+- **CORS**: Configured for `http://localhost:3000` by default.
 
-```typescript
-JwtModule.register({
-  secret: process.env.JWT_SECRET || 'your-secret-key',
-  signOptions: { expiresIn: '1h' },
-})
-```
+## Dependencies
 
-### CORS Configuration
-CORS is configured to allow requests from the frontend:
+- `@nestjs/*`, `passport`, `passport-jwt`, `bcryptjs`, `class-validator`, `class-transformer`
 
-```typescript
-app.enableCors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-});
-```
+## License
 
-## Authentication Flow
-
-1. **Login Request** → User provides email/password
-2. **Validation** → Check credentials against hardcoded user
-3. **JWT Generation** → Create JWT token with user payload
-4. **Response** → Return token and user data
-5. **Protected Routes** → Verify JWT token in Authorization header
-
-## Default User
-
-For testing purposes, a hardcoded admin user is available:
-
-- **Email**: `admin@gmail.com`
-- **Password**: `admin123`
-
-## Testing
-
-```bash
-# Unit tests
-npm run test
-
-# E2E tests
-npm run test:e2e
-
-# Test coverage
-npm run test:cov
-```
-
-## Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-JWT_SECRET=your-super-secret-key
-PORT=3001
-NODE_ENV=development
-```
-
-## Security Considerations
-
-- JWT tokens expire after 1 hour
-- Passwords are hashed using bcrypt
-- CORS is configured for specific origin
-- Protected routes require valid JWT token
-- Input validation using class-validator
-
-## Development Notes
-
-- Currently uses in-memory storage for meetings
-- User data is hardcoded for simplicity
-- JWT secret should be moved to environment variables in production
-- Consider adding rate limiting for production use
-# meeting_backend
+MIT
